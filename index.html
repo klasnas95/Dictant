@@ -2,122 +2,121 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Школьный диктант</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Диктант для тетради</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #333;
+            padding: 15px;
+            color: #2d3748;
+            font-size: 16px;
+            line-height: 1.5;
         }
         
         .container {
-            width: 100%;
-            max-width: 900px;
-            background-color: white;
+            max-width: 100%;
+            background: white;
             border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(to right, #4b6cb7, #182848);
-            color: white;
-            padding: 25px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 700px;
             margin: 0 auto;
         }
         
+        .header {
+            background: linear-gradient(to right, #2b6cb0, #2c5282);
+            color: white;
+            padding: 22px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.92;
+            line-height: 1.4;
+        }
+        
         .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
         }
         
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .left-panel, .right-panel {
+        .panel {
             display: flex;
             flex-direction: column;
         }
         
         .panel-title {
-            font-size: 1.4rem;
-            color: #182848;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4b6cb7;
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4299e1;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .panel-title i {
-            color: #4b6cb7;
-        }
-        
         .text-area {
-            flex-grow: 1;
-            padding: 20px;
-            border: 2px solid #e1e8f0;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            width: 100%;
+            min-height: 180px;
+            padding: 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 1.05rem;
             line-height: 1.6;
-            resize: none;
-            transition: border-color 0.3s;
-            background-color: #f9fbfd;
+            resize: vertical;
+            transition: all 0.2s;
+            background-color: #f7fafc;
+            margin-bottom: 5px;
         }
         
         .text-area:focus {
             outline: none;
-            border-color: #4b6cb7;
+            border-color: #4299e1;
             background-color: white;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+        
+        .char-counter {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 5px;
         }
         
         .controls {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px;
         }
         
         .control-group {
-            background-color: #f9fbfd;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #e1e8f0;
+            background-color: #f8fafc;
+            padding: 18px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
         }
         
         .slider-container {
@@ -127,45 +126,53 @@
         .slider-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-weight: 500;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1rem;
         }
         
         .slider-value {
-            color: #4b6cb7;
-            font-weight: bold;
+            color: #2b6cb0;
+            font-weight: 700;
         }
         
         input[type="range"] {
             width: 100%;
-            height: 8px;
+            height: 10px;
             -webkit-appearance: none;
-            background: #e1e8f0;
-            border-radius: 4px;
+            background: #e2e8f0;
+            border-radius: 5px;
             outline: none;
         }
         
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            background: #4b6cb7;
+            background: #2b6cb0;
             cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border: 3px solid white;
         }
         
         .buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 10px;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .btn-row {
+            display: flex;
+            gap: 12px;
         }
         
         .btn {
             flex: 1;
-            padding: 15px;
+            padding: 16px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
@@ -173,103 +180,91 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .btn:active {
+            transform: translateY(2px);
         }
         
         .btn-primary {
-            background: linear-gradient(to right, #4b6cb7, #3a56a4);
+            background: linear-gradient(to right, #2b6cb0, #3182ce);
             color: white;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(to right, #3a56a4, #2a458c);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(58, 86, 164, 0.3);
         }
         
         .btn-secondary {
-            background-color: #f0f4f8;
-            color: #4b6cb7;
-            border: 2px solid #d1dceb;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #e4eaf3;
-            transform: translateY(-2px);
+            background-color: #edf2f7;
+            color: #2d3748;
+            border: 2px solid #cbd5e0;
         }
         
         .btn-stop {
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            background: linear-gradient(to right, #e53e3e, #c53030);
             color: white;
         }
         
-        .btn-stop:hover {
-            background: linear-gradient(to right, #e86a4c, #f09f6d);
-            transform: translateY(-2px);
-        }
-        
         .current-word-container {
-            background: linear-gradient(to right, #eef2f9, #e4eaf3);
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 20px;
+            background: linear-gradient(to right, #ebf4ff, #e6fffa);
+            padding: 22px;
+            border-radius: 14px;
+            margin-top: 15px;
             text-align: center;
-            border: 2px dashed #c3cfe2;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            border: 2px dashed #90cdf4;
         }
         
         .current-word-label {
-            font-size: 1.1rem;
-            color: #666;
+            font-size: 1rem;
+            color: #4a5568;
             margin-bottom: 10px;
         }
         
         .current-word {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #182848;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2d3748;
             min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
+            word-break: break-word;
+            padding: 5px;
         }
         
         .status {
-            font-size: 1.1rem;
-            color: #4b6cb7;
+            font-size: 1.05rem;
+            color: #2b6cb0;
             font-weight: 600;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         
         .counter {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
-            color: #666;
-            font-size: 1rem;
+            color: #4a5568;
+            font-size: 0.95rem;
         }
         
         .instructions {
-            background-color: #f0f7ff;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 25px;
-            border-left: 5px solid #4b6cb7;
+            background-color: #f0fff4;
+            padding: 18px;
+            border-radius: 14px;
+            margin-top: 20px;
+            border-left: 5px solid #48bb78;
         }
         
         .instructions h3 {
-            color: #182848;
+            color: #2d3748;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.2rem;
         }
         
-        .instructions ol {
-            padding-left: 20px;
+        .instructions ul {
+            padding-left: 22px;
         }
         
         .instructions li {
@@ -279,75 +274,137 @@
         
         .footer {
             text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #e1e8f0;
-            background-color: #f9fbfd;
+            padding: 18px;
+            color: #718096;
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+            background-color: #f8fafc;
         }
         
-        .highlight {
-            background-color: #fffacd;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-weight: 600;
+        .voice-note {
+            background-color: #fffaf0;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #ed8936;
+            font-size: 0.95rem;
+            color: #744210;
+        }
+        
+        /* Адаптация для больших экранов */
+        @media (min-width: 768px) {
+            .content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+                padding: 25px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .text-area {
+                min-height: 300px;
+            }
+            
+            .buttons {
+                flex-direction: row;
+            }
+        }
+        
+        /* Улучшение для очень маленьких экранов */
+        @media (max-width: 360px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 18px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .content {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 1rem;
+            }
+            
+            .current-word {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-pencil-alt"></i> Школьный диктант</h1>
-            <p>Вставьте текст ниже, настройте скорость и паузы, затем начните диктовку для письма в тетрадь</p>
+            <h1><i class="fas fa-pencil-alt"></i> Диктант для тетради</h1>
+            <p>Вставьте текст, настройте скорость и паузы, затем начните диктовку</p>
         </div>
         
         <div class="content">
-            <div class="left-panel">
+            <div class="panel">
                 <div class="panel-title"><i class="fas fa-align-left"></i> Текст для диктовки</div>
-                <textarea id="text" class="text-area" placeholder="Вставьте сюда текст для диктовки...&#10;Например:&#10;Осень — прекрасное время года. Листья на деревьях меняют цвет и опадают, устилая землю ярким ковром. Воздух становится прохладным и свежим. Птицы улетают в теплые края, а звери готовятся к зиме."></textarea>
+                <textarea id="text" class="text-area" placeholder="Вставьте или напишите текст для диктовки...&#10;&#10;Пример:&#10;Диктант помогает развивать грамотность. Регулярные тренировки улучшают навыки письма и правописания. Старайтесь писать аккуратно и без ошибок."></textarea>
+                <div class="char-counter">Символов: <span id="charCount">0</span></div>
                 
                 <div class="instructions">
-                    <h3><i class="fas fa-lightbulb"></i> Как пользоваться</h3>
-                    <ol>
-                        <li>Вставьте или напишите текст в поле слева</li>
-                        <li>Настройте скорость диктовки и паузы между словами</li>
-                        <li>Нажмите "Начать диктовку" и пишите слова в тетрадь</li>
-                        <li>Используйте кнопки "Пауза" и "Стоп" для управления</li>
-                        <li>Следите за текущим словом в правой панели</li>
-                    </ol>
+                    <h3><i class="fas fa-mobile-alt"></i> Как пользоваться на телефоне</h3>
+                    <ul>
+                        <li>Вставьте текст в поле выше</li>
+                        <li>Настройте скорость и паузу под ваш темп письма</li>
+                        <li>Нажмите «Начать диктовку» и пишите в тетрадь</li>
+                        <li>Используйте паузу, если не успеваете</li>
+                        <li>Текущее слово будет отображаться крупно</li>
+                    </ul>
                 </div>
             </div>
             
-            <div class="right-panel">
+            <div class="panel">
                 <div class="panel-title"><i class="fas fa-sliders-h"></i> Настройки диктовки</div>
                 
                 <div class="controls">
                     <div class="control-group">
                         <div class="slider-label">
-                            <span>Скорость диктовки</span>
-                            <span class="slider-value" id="speedValue">0.7</span>
+                            <span>Скорость чтения</span>
+                            <span class="slider-value" id="speedValue">0.8</span>
                         </div>
                         <div class="slider-container">
-                            <input type="range" id="rate" min="0.3" max="1.5" step="0.1" value="0.7">
+                            <input type="range" id="rate" min="0.3" max="1.5" step="0.1" value="0.8">
                         </div>
+                        
                         <div class="slider-label">
                             <span>Пауза между словами</span>
                             <span class="slider-value" id="pauseValue">2.0 сек</span>
                         </div>
                         <div class="slider-container">
-                            <input type="range" id="wordPause" min="0.5" max="5" step="0.5" value="2">
+                            <input type="range" id="wordPause" min="1" max="5" step="0.5" value="2">
+                        </div>
+                        
+                        <div class="voice-note">
+                            <i class="fas fa-info-circle"></i> Используется стандартный голос вашего устройства
                         </div>
                     </div>
                     
                     <div class="buttons">
-                        <button class="btn btn-primary" onclick="startDictation()" id="startBtn">
-                            <i class="fas fa-play"></i> Начать диктовку
-                        </button>
-                        <button class="btn btn-secondary" onclick="pauseDictation()" id="pauseBtn">
-                            <i class="fas fa-pause"></i> Пауза
-                        </button>
-                        <button class="btn btn-stop" onclick="stopDictation()" id="stopBtn">
-                            <i class="fas fa-stop"></i> Стоп
+                        <div class="btn-row">
+                            <button class="btn btn-primary" onclick="startDictation()" id="startBtn">
+                                <i class="fas fa-play"></i> Начать диктовку
+                            </button>
+                            <button class="btn btn-secondary" onclick="pauseDictation()" id="pauseBtn" disabled>
+                                <i class="fas fa-pause"></i> Пауза
+                            </button>
+                        </div>
+                        <button class="btn btn-stop" onclick="stopDictation()" id="stopBtn" disabled>
+                            <i class="fas fa-stop"></i> Остановить
                         </button>
                     </div>
                     
@@ -365,11 +422,12 @@
         </div>
         
         <div class="footer">
-            <p>Диктант для школы • Используйте для тренировки письма и орфографии • Работает в любом современном браузере</p>
+            <p>Диктант для школы • Оптимизировано для телефона • Работает в современных браузерах</p>
         </div>
     </div>
     
     <script>
+        // Основные переменные
         let words = [];
         let currentWordIndex = 0;
         let isPaused = false;
@@ -390,6 +448,15 @@
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const stopBtn = document.getElementById('stopBtn');
+        const textArea = document.getElementById('text');
+        const charCountEl = document.getElementById('charCount');
+        
+        // Счетчик символов
+        function updateCharCount() {
+            charCountEl.textContent = textArea.value.length;
+        }
+        
+        textArea.addEventListener('input', updateCharCount);
         
         // Обновление значений слайдеров
         rateSlider.addEventListener('input', function() {
@@ -400,25 +467,27 @@
             pauseValue.textContent = this.value + ' сек';
         });
         
+        // Начало диктовки
         function startDictation() {
-            const text = document.getElementById('text').value;
+            const text = textArea.value.trim();
             const rate = parseFloat(rateSlider.value);
             wordDelay = parseFloat(pauseSlider.value) * 1000;
             
-            if (!text.trim()) {
-                statusEl.textContent = 'Введите текст для диктовки!';
-                statusEl.style.color = '#ff7e5f';
+            if (!text) {
+                showStatus('Введите текст для диктовки!', 'error');
+                vibrate();
                 return;
             }
             
-            // Разбиваем текст на слова
+            // Разбиваем текст на слова и знаки препинания
             words = text.match(/[\wа-яА-ЯёЁ\-]+|[.,!?;:]/g) || [];
             
             if (words.length === 0) {
-                statusEl.textContent = 'Не найдено слов для диктовки';
+                showStatus('Не найдено слов для диктовки', 'error');
                 return;
             }
             
+            // Сброс состояния
             currentWordIndex = 0;
             isPaused = false;
             isStopped = false;
@@ -427,21 +496,16 @@
             // Обновляем UI
             totalWordsEl.textContent = words.length;
             updateProgress();
-            statusEl.textContent = 'Диктовка началась...';
-            statusEl.style.color = '#4b6cb7';
+            showStatus('Диктовка началась...', 'info');
             
             // Обновляем кнопки
-            startBtn.disabled = true;
-            startBtn.innerHTML = '<i class="fas fa-sync-alt"></i> В процессе...';
-            startBtn.style.opacity = '0.7';
+            toggleButtons(true);
             
-            pauseBtn.disabled = false;
-            stopBtn.disabled = false;
-            
-            // Начинаем диктовку
-            speakNextWord(rate);
+            // Начинаем диктовку с небольшой задержкой
+            setTimeout(() => speakNextWord(rate), 300);
         }
         
+        // Произношение следующего слова
         function speakNextWord(rate) {
             if (isStopped || currentWordIndex >= words.length) {
                 endDictation();
@@ -463,77 +527,76 @@
             // Определяем, является ли слово знаком препинания
             const isPunctuation = /^[.,!?;:]$/.test(word);
             
-            // Для знаков препинания делаем особое объявление
+            // Создаем высказывание
+            const utterance = new SpeechSynthesisUtterance();
+            
+            // Для знаков препинания озвучиваем их названия
             if (isPunctuation) {
-                let punctuationName;
-                switch(word) {
-                    case '.': punctuationName = 'точка'; break;
-                    case ',': punctuationName = 'запятая'; break;
-                    case '!': punctuationName = 'восклицательный знак'; break;
-                    case '?': punctuationName = 'вопрос'; break;
-                    case ';': punctuationName = 'точка с запятой'; break;
-                    case ':': punctuationName = 'двоеточие'; break;
-                    default: punctuationName = word;
-                }
-                
-                // Произносим название знака препинания
-                const utterance = new SpeechSynthesisUtterance(punctuationName);
-                utterance.rate = rate * 0.8; // Немного медленнее для знаков препинания
-                utterance.lang = 'ru-RU';
-                
-                utterance.onend = function() {
-                    // Пауза после знака препинания
-                    setTimeout(() => {
-                        currentWordIndex++;
-                        if (currentWordIndex < words.length) {
-                            speakNextWord(rate);
-                        } else {
-                            endDictation();
-                        }
-                    }, wordDelay);
-                };
-                
-                speechSynthesis.speak(utterance);
+                utterance.text = getPunctuationName(word);
+                utterance.rate = rate * 0.7; // Медленнее для знаков препинания
             } else {
-                // Произносим обычное слово
-                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.text = word;
                 utterance.rate = rate;
-                utterance.lang = 'ru-RU';
-                
-                utterance.onend = function() {
-                    // Пауза после слова
-                    setTimeout(() => {
-                        currentWordIndex++;
-                        if (currentWordIndex < words.length) {
-                            speakNextWord(rate);
-                        } else {
-                            endDictation();
-                        }
-                    }, wordDelay);
-                };
-                
-                speechSynthesis.speak(utterance);
+            }
+            
+            utterance.lang = 'ru-RU';
+            utterance.volume = 1;
+            
+            // Обработка завершения произношения
+            utterance.onend = function() {
+                // Пауза после слова/знака
+                setTimeout(() => {
+                    currentWordIndex++;
+                    if (currentWordIndex < words.length) {
+                        speakNextWord(rate);
+                    } else {
+                        endDictation();
+                    }
+                }, wordDelay);
+            };
+            
+            // Обработка ошибок
+            utterance.onerror = function(event) {
+                console.error('Ошибка синтеза речи:', event);
+                showStatus('Ошибка воспроизведения. Проверьте голосовые настройки.', 'error');
+                stopDictation();
+            };
+            
+            // Произносим
+            speechSynthesis.speak(utterance);
+        }
+        
+        // Получение названия знака препинания
+        function getPunctuationName(symbol) {
+            switch(symbol) {
+                case '.': return 'точка';
+                case ',': return 'запятая';
+                case '!': return 'восклицательный знак';
+                case '?': return 'вопрос';
+                case ';': return 'точка с запятой';
+                case ':': return 'двоеточие';
+                default: return symbol;
             }
         }
         
+        // Пауза/продолжение
         function pauseDictation() {
-            if (isSpeaking) {
-                if (!isPaused) {
-                    speechSynthesis.pause();
-                    isPaused = true;
-                    pauseBtn.innerHTML = '<i class="fas fa-play"></i> Продолжить';
-                    statusEl.textContent = 'Пауза';
-                    statusEl.style.color = '#ffa500';
-                } else {
-                    speechSynthesis.resume();
-                    isPaused = false;
-                    pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
-                    statusEl.textContent = 'Диктовка продолжается...';
-                    statusEl.style.color = '#4b6cb7';
-                }
+            if (!isSpeaking) return;
+            
+            if (!isPaused) {
+                speechSynthesis.pause();
+                isPaused = true;
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Продолжить';
+                showStatus('Пауза', 'warning');
+            } else {
+                speechSynthesis.resume();
+                isPaused = false;
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                showStatus('Диктовка продолжается...', 'info');
             }
         }
         
+        // Остановка
         function stopDictation() {
             speechSynthesis.cancel();
             isStopped = true;
@@ -541,41 +604,29 @@
             isSpeaking = false;
             
             currentWordEl.textContent = '—';
-            statusEl.textContent = 'Диктовка остановлена';
-            statusEl.style.color = '#ff7e5f';
-            
-            // Восстанавливаем кнопки
-            startBtn.disabled = false;
-            startBtn.innerHTML = '<i class="fas fa-play"></i> Начать диктовку';
-            startBtn.style.opacity = '1';
-            
-            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
-            pauseBtn.disabled = true;
-            stopBtn.disabled = true;
+            showStatus('Диктовка остановлена', 'error');
+            toggleButtons(false);
         }
         
+        // Завершение диктовки
         function endDictation() {
             isSpeaking = false;
             currentWordEl.textContent = '—';
-            statusEl.textContent = 'Диктовка завершена!';
-            statusEl.style.color = '#4CAF50';
-            
-            // Восстанавливаем кнопки
-            startBtn.disabled = false;
-            startBtn.innerHTML = '<i class="fas fa-redo"></i> Начать заново';
-            startBtn.style.opacity = '1';
-            
-            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
-            pauseBtn.disabled = true;
-            stopBtn.disabled = true;
+            showStatus('Диктовка завершена! Проверьте свою работу.', 'success');
+            toggleButtons(false);
             
             // Произносим завершающее сообщение
             const utterance = new SpeechSynthesisUtterance("Диктант завершён. Проверьте свою работу.");
             utterance.rate = 0.8;
             utterance.lang = 'ru-RU';
-            speechSynthesis.speak(utterance);
+            utterance.volume = 0.7;
+            
+            setTimeout(() => {
+                speechSynthesis.speak(utterance);
+            }, 500);
         }
         
+        // Обновление прогресса
         function updateProgress() {
             if (words.length > 0) {
                 const progress = Math.round((currentWordIndex / words.length) * 100);
@@ -585,26 +636,72 @@
             }
         }
         
-        // Устанавливаем начальные значения
-        speedValue.textContent = rateSlider.value;
-        pauseValue.textContent = pauseSlider.value + ' сек';
-        pauseBtn.disabled = true;
-        stopBtn.disabled = true;
+        // Показать статус с цветом
+        function showStatus(message, type) {
+            statusEl.textContent = message;
+            
+            switch(type) {
+                case 'error':
+                    statusEl.style.color = '#e53e3e';
+                    break;
+                case 'warning':
+                    statusEl.style.color = '#d69e2e';
+                    break;
+                case 'success':
+                    statusEl.style.color = '#38a169';
+                    break;
+                case 'info':
+                default:
+                    statusEl.style.color = '#2b6cb0';
+                    break;
+            }
+        }
         
-        // Добавляем демо-текст при первом открытии
+        // Управление кнопками
+        function toggleButtons(dictationActive) {
+            if (dictationActive) {
+                startBtn.disabled = true;
+                startBtn.innerHTML = '<i class="fas fa-microphone"></i> Диктует...';
+                pauseBtn.disabled = false;
+                stopBtn.disabled = false;
+            } else {
+                startBtn.disabled = false;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> Начать диктовку';
+                pauseBtn.disabled = true;
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                stopBtn.disabled = true;
+            }
+        }
+        
+        // Вибрация для мобильных устройств (если поддерживается)
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        }
+        
+        // Инициализация при загрузке
         window.addEventListener('DOMContentLoaded', function() {
-            const textarea = document.getElementById('text');
-            if (textarea.value.trim() === '') {
-                textarea.value = `Осень — прекрасное время года. Листья на деревьях меняют цвет и опадают, устилая землю ярким ковром. Воздух становится прохладным и свежим.
+            // Устанавливаем начальные значения
+            speedValue.textContent = rateSlider.value;
+            pauseValue.textContent = pauseSlider.value + ' сек';
+            updateCharCount();
+            
+            // Добавляем демо-текст при первом открытии
+            if (textArea.value.trim() === '') {
+                const demoText = `Диктант — это прекрасное упражнение для развития грамотности. Он помогает улучшить память, внимание к деталям и навыки письма.
 
-Птицы улетают в теплые края, а звери готовятся к зиме: белочка запасает орехи, медведь ищет берлогу для спячки.
+Каждое утро солнце поднимается над горизонтом, освещая землю тёплыми лучами. Птицы начинают петь свои прекрасные песни, приветствуя новый день.
 
-Вечера становятся длиннее, и так приятно сидеть дома с чашкой горячего чая, читая интересную книгу или делая уроки.
+В школе мы учимся не только читать и писать, но и думать, анализировать, принимать решения. Знания открывают перед нами новые возможности и горизонты.
 
-Диктант помогает развивать внимание, память и грамотность. Регулярные упражнения улучшают навыки письма и правописания.`;
+Регулярные занятия диктантом помогут вам стать более грамотным и уверенным в своих силах. Пишите аккуратно, соблюдайте правила орфографии и пунктуации.`;
+                
+                textArea.value = demoText;
+                updateCharCount();
                 
                 // Обновляем счетчик слов
-                const demoWords = textarea.value.match(/[\wа-яА-ЯёЁ\-]+|[.,!?;:]/g) || [];
+                const demoWords = demoText.match(/[\wа-яА-ЯёЁ\-]+|[.,!?;:]/g) || [];
                 totalWordsEl.textContent = demoWords.length;
             }
         });
