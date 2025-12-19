@@ -246,6 +246,41 @@
             font-size: 0.95rem;
         }
         
+        /* СТИЛИ ДЛЯ ТАЙМЕРА */
+        .timer-container {
+            background: linear-gradient(to right, #fef3c7, #fde68a);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 10px;
+            text-align: center;
+            border: 2px solid #f59e0b;
+            display: none; /* Скрыт по умолчанию */
+        }
+        
+        .timer-title {
+            font-size: 0.95rem;
+            color: #92400e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #92400e;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-subtitle {
+            font-size: 0.85rem;
+            color: #92400e;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+        
         .instructions {
             background-color: #f0fff4;
             padding: 18px;
@@ -340,6 +375,10 @@
             .current-word {
                 font-size: 1.8rem;
             }
+            
+            .timer-display {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -364,6 +403,7 @@
                         <li>Нажмите «Начать диктовку» и пишите в тетрадь</li>
                         <li>Используйте паузу, если не успеваете</li>
                         <li>Текущее слово будет отображаться крупно</li>
+                        <li>Таймер покажет, сколько времени осталось</li>
                     </ul>
                 </div>
             </div>
@@ -408,6 +448,15 @@
                         </button>
                     </div>
                     
+                    <!-- КОНТЕЙНЕР ТАЙМЕРА -->
+                    <div class="timer-container" id="timerContainer">
+                        <div class="timer-title">
+                            <i class="fas fa-clock"></i> Осталось времени
+                        </div>
+                        <div class="timer-display" id="timerDisplay">00:00</div>
+                        <div class="timer-subtitle" id="timerSubtitle">Расчетное время завершения</div>
+                    </div>
+                    
                     <div class="current-word-container">
                         <div class="current-word-label">Сейчас пишите:</div>
                         <div class="current-word" id="currentWord">—</div>
@@ -434,6 +483,9 @@
         let isStopped = false;
         let wordDelay = 2000; // 2 секунды по умолчанию
         let isSpeaking = false;
+        let totalEstimatedTime = 0; // Общее расчетное время в миллисекундах
+        let timeRemaining = 0; // Оставшееся время в миллисекундах
+        let timerInterval = null; // Интервал для обновления таймера
         
         // Элементы DOM
         const rateSlider = document.getElementById('rate');
@@ -450,6 +502,9 @@
         const stopBtn = document.getElementById('stopBtn');
         const textArea = document.getElementById('text');
         const charCountEl = document.getElementById('charCount');
+        const timerContainer = document.getElementById('timerContainer');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerSubtitle = document.getElementById('timerSubtitle');
         
         // Счетчик символов
         function updateCharCount() {
@@ -493,16 +548,158 @@
             isStopped = false;
             isSpeaking = true;
             
+            // РАСЧЕТ ВРЕМЕНИ: оцениваем общее время диктовки
+            calculateTotalTime(rate);
+            
             // Обновляем UI
             totalWordsEl.textContent = words.length;
             updateProgress();
             showStatus('Диктовка началась...', 'info');
+            
+            // Показываем таймер
+            timerContainer.style.display = 'block';
+            updateTimerDisplay();
             
             // Обновляем кнопки
             toggleButtons(true);
             
             // Начинаем диктовку с небольшой задержкой
             setTimeout(() => speakNextWord(rate), 300);
+            
+            // Запускаем таймер
+            startTimer();
+        }
+        
+        // Расчет общего времени диктовки
+        function calculateTotalTime(rate) {
+            // Базовое время произношения слова (примерно 0.5 секунды на слог)
+            // Упрощенный расчет: среднее слово в русском языке - 2 слога = 1 секунда
+            const avgWordDuration = 1000 / rate; // миллисекунды
+            
+            // Считаем только слова (не знаки препинания)
+            const wordCount = words.filter(word => !/^[.,!?;:]$/.test(word)).length;
+            const punctuationCount = words.length - wordCount;
+            
+            // Время для слов
+            let totalTime = wordCount * avgWordDuration;
+            
+            // Время для знаков препинания (произносятся быстрее)
+            totalTime += punctuationCount * (avgWordDuration * 0.5);
+            
+            // Добавляем паузы между словами
+            totalTime += (words.length - 1) * wordDelay;
+            
+            // Добавляем буфер для надежности (+15%)
+            totalTime *= 1.15;
+            
+            totalEstimatedTime = Math.round(totalTime);
+            timeRemaining = totalEstimatedTime;
+            
+            // Обновляем подпись таймера с расчетным временем завершения
+            const endTime = new Date(Date.now() + totalEstimatedTime);
+            const endTimeStr = endTime.toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            timerSubtitle.textContent = `Завершится примерно в ${endTimeStr}`;
+        }
+        
+        // Запуск таймера
+        function startTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            timerInterval = setInterval(() => {
+                if (!isPaused && !isStopped && isSpeaking && timeRemaining > 0) {
+                    timeRemaining -= 1000; // Уменьшаем на 1 секунду
+                    updateTimerDisplay();
+                    
+                    // Если время вышло
+                    if (timeRemaining <= 0) {
+                        timeRemaining = 0;
+                        updateTimerDisplay();
+                        clearInterval(timerInterval);
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Обновление отображения таймера
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+            
+            // Форматирование: 05:09
+            timerDisplay.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Меняем цвет, если осталось мало времени
+            if (timeRemaining < 30000) { // Менее 30 секунд
+                timerDisplay.style.color = '#e53e3e';
+                timerContainer.style.background = 'linear-gradient(to right, #fed7d7, #feb2b2)';
+                timerContainer.style.borderColor = '#fc8181';
+            } else if (timeRemaining < 60000) { // Менее 1 минуты
+                timerDisplay.style.color = '#d69e2e';
+                timerContainer.style.background = 'linear-gradient(to right, #feebc8, #fbd38d)';
+                timerContainer.style.borderColor = '#f6ad55';
+            } else {
+                timerDisplay.style.color = '#92400e';
+                timerContainer.style.background = 'linear-gradient(to right, #fef3c7, #fde68a)';
+                timerContainer.style.borderColor = '#f59e0b';
+            }
+        }
+        
+        // Пауза/продолжение таймера
+        function pauseDictation() {
+            if (!isSpeaking) return;
+            
+            if (!isPaused) {
+                speechSynthesis.pause();
+                isPaused = true;
+                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Продолжить';
+                showStatus('Пауза', 'warning');
+                
+                // Останавливаем таймер
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+            } else {
+                speechSynthesis.resume();
+                isPaused = false;
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                showStatus('Диктовка продолжается...', 'info');
+                
+                // Пересчитываем время завершения
+                const endTime = new Date(Date.now() + timeRemaining);
+                const endTimeStr = endTime.toLocaleTimeString('ru-RU', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                timerSubtitle.textContent = `Завершится примерно в ${endTimeStr}`;
+                
+                // Возобновляем таймер
+                startTimer();
+            }
+        }
+        
+        // Остановка диктовки
+        function stopDictation() {
+            speechSynthesis.cancel();
+            isStopped = true;
+            isPaused = false;
+            isSpeaking = false;
+            
+            currentWordEl.textContent = '—';
+            showStatus('Диктовка остановлена', 'error');
+            toggleButtons(false);
+            
+            // Останавливаем и сбрасываем таймер
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timerContainer.style.display = 'none';
         }
         
         // Произношение следующего слова
@@ -579,41 +776,23 @@
             }
         }
         
-        // Пауза/продолжение
-        function pauseDictation() {
-            if (!isSpeaking) return;
-            
-            if (!isPaused) {
-                speechSynthesis.pause();
-                isPaused = true;
-                pauseBtn.innerHTML = '<i class="fas fa-play"></i> Продолжить';
-                showStatus('Пауза', 'warning');
-            } else {
-                speechSynthesis.resume();
-                isPaused = false;
-                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
-                showStatus('Диктовка продолжается...', 'info');
-            }
-        }
-        
-        // Остановка
-        function stopDictation() {
-            speechSynthesis.cancel();
-            isStopped = true;
-            isPaused = false;
-            isSpeaking = false;
-            
-            currentWordEl.textContent = '—';
-            showStatus('Диктовка остановлена', 'error');
-            toggleButtons(false);
-        }
-        
         // Завершение диктовки
         function endDictation() {
             isSpeaking = false;
             currentWordEl.textContent = '—';
             showStatus('Диктовка завершена! Проверьте свою работу.', 'success');
             toggleButtons(false);
+            
+            // Останавливаем таймер
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Обновляем таймер на 00:00
+            timeRemaining = 0;
+            updateTimerDisplay();
+            timerSubtitle.textContent = 'Диктовка завершена';
             
             // Произносим завершающее сообщение
             const utterance = new SpeechSynthesisUtterance("Диктант завершён. Проверьте свою работу.");
