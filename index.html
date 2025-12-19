@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Школьный диктант</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-title {
+            font-size: 1.4rem;
+            color: #182848;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4b6cb7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-title i {
+            color: #4b6cb7;
+        }
+        
+        .text-area {
+            flex-grow: 1;
+            padding: 20px;
+            border: 2px solid #e1e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            resize: none;
+            transition: border-color 0.3s;
+            background-color: #f9fbfd;
+        }
+        
+        .text-area:focus {
+            outline: none;
+            border-color: #4b6cb7;
+            background-color: white;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .control-group {
+            background-color: #f9fbfd;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e1e8f0;
+        }
+        
+        .slider-container {
+            margin: 15px 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .slider-value {
+            color: #4b6cb7;
+            font-weight: bold;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #e1e8f0;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #4b6cb7;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #4b6cb7, #3a56a4);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3a56a4, #2a458c);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(58, 86, 164, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #f0f4f8;
+            color: #4b6cb7;
+            border: 2px solid #d1dceb;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e4eaf3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-stop {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+        }
+        
+        .btn-stop:hover {
+            background: linear-gradient(to right, #e86a4c, #f09f6d);
+            transform: translateY(-2px);
+        }
+        
+        .current-word-container {
+            background: linear-gradient(to right, #eef2f9, #e4eaf3);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px dashed #c3cfe2;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .current-word-label {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .current-word {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #182848;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .status {
+            font-size: 1.1rem;
+            color: #4b6cb7;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .counter {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .instructions {
+            background-color: #f0f7ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 5px solid #4b6cb7;
+        }
+        
+        .instructions h3 {
+            color: #182848;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e1e8f0;
+            background-color: #f9fbfd;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-pencil-alt"></i> Школьный диктант</h1>
+            <p>Вставьте текст ниже, настройте скорость и паузы, затем начните диктовку для письма в тетрадь</p>
+        </div>
+        
+        <div class="content">
+            <div class="left-panel">
+                <div class="panel-title"><i class="fas fa-align-left"></i> Текст для диктовки</div>
+                <textarea id="text" class="text-area" placeholder="Вставьте сюда текст для диктовки...&#10;Например:&#10;Осень — прекрасное время года. Листья на деревьях меняют цвет и опадают, устилая землю ярким ковром. Воздух становится прохладным и свежим. Птицы улетают в теплые края, а звери готовятся к зиме."></textarea>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-lightbulb"></i> Как пользоваться</h3>
+                    <ol>
+                        <li>Вставьте или напишите текст в поле слева</li>
+                        <li>Настройте скорость диктовки и паузы между словами</li>
+                        <li>Нажмите "Начать диктовку" и пишите слова в тетрадь</li>
+                        <li>Используйте кнопки "Пауза" и "Стоп" для управления</li>
+                        <li>Следите за текущим словом в правой панели</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="panel-title"><i class="fas fa-sliders-h"></i> Настройки диктовки</div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <div class="slider-label">
+                            <span>Скорость диктовки</span>
+                            <span class="slider-value" id="speedValue">0.7</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="rate" min="0.3" max="1.5" step="0.1" value="0.7">
+                        </div>
+                        <div class="slider-label">
+                            <span>Пауза между словами</span>
+                            <span class="slider-value" id="pauseValue">2.0 сек</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="wordPause" min="0.5" max="5" step="0.5" value="2">
+                        </div>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button class="btn btn-primary" onclick="startDictation()" id="startBtn">
+                            <i class="fas fa-play"></i> Начать диктовку
+                        </button>
+                        <button class="btn btn-secondary" onclick="pauseDictation()" id="pauseBtn">
+                            <i class="fas fa-pause"></i> Пауза
+                        </button>
+                        <button class="btn btn-stop" onclick="stopDictation()" id="stopBtn">
+                            <i class="fas fa-stop"></i> Стоп
+                        </button>
+                    </div>
+                    
+                    <div class="current-word-container">
+                        <div class="current-word-label">Сейчас пишите:</div>
+                        <div class="current-word" id="currentWord">—</div>
+                        <div class="status" id="status">Готов к диктовке</div>
+                        <div class="counter">
+                            <span>Слово: <span id="wordCounter">0</span> из <span id="totalWords">0</span></span>
+                            <span>Прогресс: <span id="progress">0</span>%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Диктант для школы • Используйте для тренировки письма и орфографии • Работает в любом современном браузере</p>
+        </div>
+    </div>
+    
+    <script>
+        let words = [];
+        let currentWordIndex = 0;
+        let isPaused = false;
+        let isStopped = false;
+        let wordDelay = 2000; // 2 секунды по умолчанию
+        let isSpeaking = false;
+        
+        // Элементы DOM
+        const rateSlider = document.getElementById('rate');
+        const pauseSlider = document.getElementById('wordPause');
+        const speedValue = document.getElementById('speedValue');
+        const pauseValue = document.getElementById('pauseValue');
+        const currentWordEl = document.getElementById('currentWord');
+        const statusEl = document.getElementById('status');
+        const wordCounterEl = document.getElementById('wordCounter');
+        const totalWordsEl = document.getElementById('totalWords');
+        const progressEl = document.getElementById('progress');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        
+        // Обновление значений слайдеров
+        rateSlider.addEventListener('input', function() {
+            speedValue.textContent = this.value;
+        });
+        
+        pauseSlider.addEventListener('input', function() {
+            pauseValue.textContent = this.value + ' сек';
+        });
+        
+        function startDictation() {
+            const text = document.getElementById('text').value;
+            const rate = parseFloat(rateSlider.value);
+            wordDelay = parseFloat(pauseSlider.value) * 1000;
+            
+            if (!text.trim()) {
+                statusEl.textContent = 'Введите текст для диктовки!';
+                statusEl.style.color = '#ff7e5f';
+                return;
+            }
+            
+            // Разбиваем текст на слова
+            words = text.match(/[\wа-яА-ЯёЁ\-]+|[.,!?;:]/g) || [];
+            
+            if (words.length === 0) {
+                statusEl.textContent = 'Не найдено слов для диктовки';
+                return;
+            }
+            
+            currentWordIndex = 0;
+            isPaused = false;
+            isStopped = false;
+            isSpeaking = true;
+            
+            // Обновляем UI
+            totalWordsEl.textContent = words.length;
+            updateProgress();
+            statusEl.textContent = 'Диктовка началась...';
+            statusEl.style.color = '#4b6cb7';
+            
+            // Обновляем кнопки
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<i class="fas fa-sync-alt"></i> В процессе...';
+            startBtn.style.opacity = '0.7';
+            
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+            
+            // Начинаем диктовку
+            speakNextWord(rate);
+        }
+        
+        function speakNextWord(rate) {
+            if (isStopped || currentWordIndex >= words.length) {
+                endDictation();
+                return;
+            }
+            
+            if (isPaused) {
+                setTimeout(() => speakNextWord(rate), 100);
+                return;
+            }
+            
+            const word = words[currentWordIndex];
+            
+            // Обновляем UI с текущим словом
+            currentWordEl.textContent = `"${word}"`;
+            wordCounterEl.textContent = currentWordIndex + 1;
+            updateProgress();
+            
+            // Определяем, является ли слово знаком препинания
+            const isPunctuation = /^[.,!?;:]$/.test(word);
+            
+            // Для знаков препинания делаем особое объявление
+            if (isPunctuation) {
+                let punctuationName;
+                switch(word) {
+                    case '.': punctuationName = 'точка'; break;
+                    case ',': punctuationName = 'запятая'; break;
+                    case '!': punctuationName = 'восклицательный знак'; break;
+                    case '?': punctuationName = 'вопрос'; break;
+                    case ';': punctuationName = 'точка с запятой'; break;
+                    case ':': punctuationName = 'двоеточие'; break;
+                    default: punctuationName = word;
+                }
+                
+                // Произносим название знака препинания
+                const utterance = new SpeechSynthesisUtterance(punctuationName);
+                utterance.rate = rate * 0.8; // Немного медленнее для знаков препинания
+                utterance.lang = 'ru-RU';
+                
+                utterance.onend = function() {
+                    // Пауза после знака препинания
+                    setTimeout(() => {
+                        currentWordIndex++;
+                        if (currentWordIndex < words.length) {
+                            speakNextWord(rate);
+                        } else {
+                            endDictation();
+                        }
+                    }, wordDelay);
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                // Произносим обычное слово
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.rate = rate;
+                utterance.lang = 'ru-RU';
+                
+                utterance.onend = function() {
+                    // Пауза после слова
+                    setTimeout(() => {
+                        currentWordIndex++;
+                        if (currentWordIndex < words.length) {
+                            speakNextWord(rate);
+                        } else {
+                            endDictation();
+                        }
+                    }, wordDelay);
+                };
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function pauseDictation() {
+            if (isSpeaking) {
+                if (!isPaused) {
+                    speechSynthesis.pause();
+                    isPaused = true;
+                    pauseBtn.innerHTML = '<i class="fas fa-play"></i> Продолжить';
+                    statusEl.textContent = 'Пауза';
+                    statusEl.style.color = '#ffa500';
+                } else {
+                    speechSynthesis.resume();
+                    isPaused = false;
+                    pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                    statusEl.textContent = 'Диктовка продолжается...';
+                    statusEl.style.color = '#4b6cb7';
+                }
+            }
+        }
+        
+        function stopDictation() {
+            speechSynthesis.cancel();
+            isStopped = true;
+            isPaused = false;
+            isSpeaking = false;
+            
+            currentWordEl.textContent = '—';
+            statusEl.textContent = 'Диктовка остановлена';
+            statusEl.style.color = '#ff7e5f';
+            
+            // Восстанавливаем кнопки
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fas fa-play"></i> Начать диктовку';
+            startBtn.style.opacity = '1';
+            
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+        }
+        
+        function endDictation() {
+            isSpeaking = false;
+            currentWordEl.textContent = '—';
+            statusEl.textContent = 'Диктовка завершена!';
+            statusEl.style.color = '#4CAF50';
+            
+            // Восстанавливаем кнопки
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fas fa-redo"></i> Начать заново';
+            startBtn.style.opacity = '1';
+            
+            pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+            
+            // Произносим завершающее сообщение
+            const utterance = new SpeechSynthesisUtterance("Диктант завершён. Проверьте свою работу.");
+            utterance.rate = 0.8;
+            utterance.lang = 'ru-RU';
+            speechSynthesis.speak(utterance);
+        }
+        
+        function updateProgress() {
+            if (words.length > 0) {
+                const progress = Math.round((currentWordIndex / words.length) * 100);
+                progressEl.textContent = progress;
+            } else {
+                progressEl.textContent = 0;
+            }
+        }
+        
+        // Устанавливаем начальные значения
+        speedValue.textContent = rateSlider.value;
+        pauseValue.textContent = pauseSlider.value + ' сек';
+        pauseBtn.disabled = true;
+        stopBtn.disabled = true;
+        
+        // Добавляем демо-текст при первом открытии
+        window.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('text');
+            if (textarea.value.trim() === '') {
+                textarea.value = `Осень — прекрасное время года. Листья на деревьях меняют цвет и опадают, устилая землю ярким ковром. Воздух становится прохладным и свежим.
+
+Птицы улетают в теплые края, а звери готовятся к зиме: белочка запасает орехи, медведь ищет берлогу для спячки.
+
+Вечера становятся длиннее, и так приятно сидеть дома с чашкой горячего чая, читая интересную книгу или делая уроки.
+
+Диктант помогает развивать внимание, память и грамотность. Регулярные упражнения улучшают навыки письма и правописания.`;
+                
+                // Обновляем счетчик слов
+                const demoWords = textarea.value.match(/[\wа-яА-ЯёЁ\-]+|[.,!?;:]/g) || [];
+                totalWordsEl.textContent = demoWords.length;
+            }
+        });
+    </script>
+</body>
+</html>
