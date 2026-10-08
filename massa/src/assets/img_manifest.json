@@ -1,0 +1,269 @@
+{
+ "bench": [
+  "bench_0.webp",
+  "bench_1.webp"
+ ],
+ "incline_db": [
+  "incline_db_0.webp",
+  "incline_db_1.webp"
+ ],
+ "pec_deck": [
+  "pec_deck_0.webp",
+  "pec_deck_1.webp"
+ ],
+ "db_bench": [
+  "db_bench_0.webp",
+  "db_bench_1.webp"
+ ],
+ "machine_press": [
+  "machine_press_0.webp",
+  "machine_press_1.webp"
+ ],
+ "db_fly": [
+  "db_fly_0.webp",
+  "db_fly_1.webp"
+ ],
+ "dips": [
+  "dips_0.webp",
+  "dips_1.webp"
+ ],
+ "pushup": [
+  "pushup_0.webp",
+  "pushup_1.webp"
+ ],
+ "incline_pushup": [
+  "incline_pushup_0.webp",
+  "incline_pushup_1.webp"
+ ],
+ "wide_pushup": [
+  "wide_pushup_0.webp",
+  "wide_pushup_1.webp"
+ ],
+ "decline_pushup": [
+  "decline_pushup_0.webp",
+  "decline_pushup_1.webp"
+ ],
+ "diamond": [
+  "diamond_0.webp",
+  "diamond_1.webp"
+ ],
+ "db_press": [
+  "db_press_0.webp",
+  "db_press_1.webp"
+ ],
+ "lat_raise": [
+  "lat_raise_0.webp",
+  "lat_raise_1.webp"
+ ],
+ "machine_shoulder": [
+  "machine_shoulder_0.webp",
+  "machine_shoulder_1.webp"
+ ],
+ "face_pull": [
+  "face_pull_0.webp",
+  "face_pull_1.webp"
+ ],
+ "rev_pecdeck": [
+  "rev_pecdeck_0.webp",
+  "rev_pecdeck_1.webp"
+ ],
+ "pike": [
+  "pike_0.webp"
+ ],
+ "rear_fly": [
+  "rear_fly_0.webp",
+  "rear_fly_1.webp"
+ ],
+ "shoulder_taps": [
+  "shoulder_taps_0.webp",
+  "shoulder_taps_1.webp"
+ ],
+ "arm_circles": [
+  "arm_circles_0.webp",
+  "arm_circles_1.webp"
+ ],
+ "pushdown": [
+  "pushdown_0.webp",
+  "pushdown_1.webp"
+ ],
+ "rope_pushdown": [
+  "rope_pushdown_0.webp",
+  "rope_pushdown_1.webp"
+ ],
+ "skull": [
+  "skull_0.webp",
+  "skull_1.webp"
+ ],
+ "bench_dip": [
+  "bench_dip_0.webp",
+  "bench_dip_1.webp"
+ ],
+ "overhead_ext": [
+  "overhead_ext_0.webp",
+  "overhead_ext_1.webp"
+ ],
+ "bb_curl": [
+  "bb_curl_0.webp",
+  "bb_curl_1.webp"
+ ],
+ "hammer": [
+  "hammer_0.webp",
+  "hammer_1.webp"
+ ],
+ "db_curl": [
+  "db_curl_0.webp",
+  "db_curl_1.webp"
+ ],
+ "chinup": [
+  "chinup_0.webp",
+  "chinup_1.webp"
+ ],
+ "squat": [
+  "squat_0.webp",
+  "squat_1.webp"
+ ],
+ "leg_press": [
+  "leg_press_0.webp",
+  "leg_press_1.webp"
+ ],
+ "leg_ext": [
+  "leg_ext_0.webp",
+  "leg_ext_1.webp"
+ ],
+ "leg_curl": [
+  "leg_curl_0.webp",
+  "leg_curl_1.webp"
+ ],
+ "calf": [
+  "calf_0.webp",
+  "calf_1.webp"
+ ],
+ "goblet": [
+  "goblet_0.webp",
+  "goblet_1.webp"
+ ],
+ "smith_squat": [
+  "smith_squat_0.webp",
+  "smith_squat_1.webp"
+ ],
+ "hack": [
+  "hack_0.webp",
+  "hack_1.webp"
+ ],
+ "db_lunge": [
+  "db_lunge_0.webp",
+  "db_lunge_1.webp"
+ ],
+ "rdl": [
+  "rdl_0.webp",
+  "rdl_1.webp"
+ ],
+ "seated_calf": [
+  "seated_calf_0.webp",
+  "seated_calf_1.webp"
+ ],
+ "air_squat": [
+  "air_squat_0.webp",
+  "air_squat_1.webp"
+ ],
+ "lunge": [
+  "lunge_0.webp",
+  "lunge_1.webp"
+ ],
+ "bulgarian": [
+  "bulgarian_0.webp",
+  "bulgarian_1.webp"
+ ],
+ "glute_bridge": [
+  "glute_bridge_0.webp",
+  "glute_bridge_1.webp"
+ ],
+ "wall_sit": [
+  "wall_sit_0.webp"
+ ],
+ "step_up": [
+  "step_up_0.webp",
+  "step_up_1.webp"
+ ],
+ "calf_step": [
+  "calf_step_0.webp",
+  "calf_step_1.webp"
+ ],
+ "pulldown": [
+  "pulldown_0.webp",
+  "pulldown_1.webp"
+ ],
+ "cg_pulldown": [
+  "cg_pulldown_0.webp",
+  "cg_pulldown_1.webp"
+ ],
+ "cable_row": [
+  "cable_row_0.webp",
+  "cable_row_1.webp"
+ ],
+ "db_row": [
+  "db_row_0.webp",
+  "db_row_1.webp"
+ ],
+ "bb_row": [
+  "bb_row_0.webp",
+  "bb_row_1.webp"
+ ],
+ "hyper": [
+  "hyper_0.webp",
+  "hyper_1.webp"
+ ],
+ "pullup": [
+  "pullup_0.webp",
+  "pullup_1.webp"
+ ],
+ "inverted_row": [
+  "inverted_row_0.webp",
+  "inverted_row_1.webp"
+ ],
+ "bent_row_home": [
+  "bent_row_home_0.webp",
+  "bent_row_home_1.webp"
+ ],
+ "superman": [
+  "superman_0.webp",
+  "superman_1.webp"
+ ],
+ "bird_dog": [
+  "bird_dog_0.webp"
+ ],
+ "plank": [
+  "plank_0.webp"
+ ],
+ "crunch": [
+  "crunch_0.webp",
+  "crunch_1.webp"
+ ],
+ "leg_raise": [
+  "leg_raise_0.webp",
+  "leg_raise_1.webp"
+ ],
+ "side_plank": [
+  "side_plank_0.webp",
+  "side_plank_1.webp"
+ ],
+ "bicycle": [
+  "bicycle_0.webp",
+  "bicycle_1.webp"
+ ],
+ "dead_bug": [
+  "dead_bug_0.webp",
+  "dead_bug_1.webp"
+ ],
+ "cable_crunch": [
+  "cable_crunch_0.webp",
+  "cable_crunch_1.webp"
+ ],
+ "hanging_leg": [
+  "hanging_leg_0.webp",
+  "hanging_leg_1.webp"
+ ],
+ "_hero": [
+  "hero.webp"
+ ]
+}
