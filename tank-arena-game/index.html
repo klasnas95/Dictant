@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tank Arena — арена полигонов</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Игровое поле -->
+  <canvas id="game"></canvas>
+
+  <!-- Интерфейс во время игры -->
+  <div id="hud" class="hidden">
+    <!-- Выбор нового класса (появляется на 15, 30 и 45 уровнях) -->
+    <div id="upgradePanel" class="panel hidden">
+      <div class="panel-title">Эволюция танка</div>
+      <div id="upgradeCards"></div>
+      <div class="panel-hint">Нажмите на класс, чтобы выбрать его</div>
+    </div>
+
+    <!-- Таблица лидеров -->
+    <div id="leaderboard" class="panel">
+      <div class="panel-title">Лидеры</div>
+      <div id="lbRows"></div>
+    </div>
+
+    <!-- Прокачка характеристик -->
+    <div id="statPanel" class="panel">
+      <div class="panel-title">Улучшения <span id="statPoints" class="badge">×0</span></div>
+      <div id="statRows"></div>
+    </div>
+
+    <!-- Ник, счёт и уровень -->
+    <div id="bottomCenter">
+      <div id="toggles">
+        <span id="tglFire" class="tgl">E · автострельба</span>
+        <span id="tglSpin" class="tgl">C · автоповорот</span>
+      </div>
+      <div id="playerName"></div>
+      <div class="bar score-bar"><div id="scoreFill" class="fill"></div><span id="scoreText"></span></div>
+      <div class="bar level-bar"><div id="levelFill" class="fill"></div><span id="levelText"></span></div>
+    </div>
+
+    <!-- Миникарта -->
+    <div id="minimapWrap" class="panel"><canvas id="minimap"></canvas></div>
+  </div>
+
+  <div id="fps"></div>
+  <div id="notifications"></div>
+
+  <!-- Стартовый экран -->
+  <div id="startScreen" class="overlay">
+    <div class="card">
+      <h1 class="logo">TANK<span>ARENA</span></h1>
+      <p class="subtitle">Арена полигонов против ботов</p>
+      <input id="nickInput" type="text" maxlength="16" placeholder="Введите ник" autocomplete="off" spellcheck="false">
+      <button id="playBtn" class="btn">Играть</button>
+      <div class="controls">
+        <div><kbd>W A S D</kbd> / <kbd>←↑↓→</kbd><span>движение</span></div>
+        <div><kbd>Мышь</kbd><span>прицеливание</span></div>
+        <div><kbd>ЛКМ</kbd> / <kbd>Пробел</kbd><span>стрельба</span></div>
+        <div><kbd>E</kbd><span>автострельба</span></div>
+        <div><kbd>C</kbd><span>автоповорот</span></div>
+        <div><kbd>1</kbd>–<kbd>8</kbd><span>прокачка</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Экран смерти -->
+  <div id="deathScreen" class="overlay hidden">
+    <div class="card">
+      <h2 class="death-title">Танк уничтожен</h2>
+      <p id="killedBy"></p>
+      <div class="death-stats">
+        <div><span>Счёт</span><b id="dScore">0</b></div>
+        <div><span>Уровень</span><b id="dLevel">1</b></div>
+        <div><span>Класс</span><b id="dClass">Tank</b></div>
+        <div><span>Время жизни</span><b id="dTime">0:00</b></div>
+        <div><span>Убийства</span><b id="dKills">0</b></div>
+      </div>
+      <button id="againBtn" class="btn">Играть снова</button>
+      <p class="hint">или нажмите Enter</p>
+    </div>
+  </div>
+
+  <!-- Порядок важен: каждый файл использует объявления из предыдущих -->
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/shapes.js"></script>
+  <script src="js/bullets.js"></script>
+  <script src="js/tank.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/bots.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
