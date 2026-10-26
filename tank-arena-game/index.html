@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tank Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <!-- Игровой интерфейс: виден только во время игры -->
+  <div id="hud" class="hidden">
+    <div id="fps">FPS: 0</div>
+    <div id="toggles"></div>
+
+    <div id="leaderboard">
+      <h3>Лидеры</h3>
+      <ol id="lb-list"></ol>
+    </div>
+
+    <div id="stats-panel">
+      <div class="panel-title">Улучшения <span id="points-left"></span></div>
+      <div id="stat-list"></div>
+    </div>
+
+    <div id="level-box">
+      <div id="level-text">Уровень 1</div>
+      <div id="xp-bar"><div id="xp-fill"></div></div>
+    </div>
+
+    <canvas id="minimap" width="160" height="160"></canvas>
+  </div>
+
+  <!-- Стартовый экран: ник и кнопка начала -->
+  <div id="start-screen" class="overlay">
+    <div class="card">
+      <h1>TANK ARENA</h1>
+      <p class="hint">
+        WASD — движение · Мышь — прицел · ЛКМ / пробел — огонь<br>
+        E — автострельба · C — автоповорот · 1–8 — улучшения
+      </p>
+      <input id="name-input" maxlength="14" placeholder="Ваш ник" autocomplete="off">
+      <button id="play-btn">Играть</button>
+    </div>
+  </div>
+
+  <!-- Выбор эволюции на 15, 30 и 45 уровнях (игра продолжается под панелью) -->
+  <div id="evo-panel" class="overlay soft hidden">
+    <div class="card">
+      <h2>Выберите эволюцию</h2>
+      <div id="evo-options"></div>
+    </div>
+  </div>
+
+  <!-- Экран смерти -->
+  <div id="death-screen" class="overlay hidden">
+    <div class="card">
+      <h1>Вы погибли</h1>
+      <p>Счёт: <b id="final-score">0</b></p>
+      <p>Уровень: <b id="final-level">1</b></p>
+      <p>Время жизни: <b id="final-time">0:00</b></p>
+      <button id="restart-btn">Играть снова</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/shapes.js"></script>
+  <script src="js/bullets.js"></script>
+  <script src="js/tank.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/bots.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

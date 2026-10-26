@@ -1,0 +1,376 @@
+/* Общие стили */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #e3e8f0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #2b3445;
+  user-select: none;
+}
+
+#game {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Оверлеи: стартовый экран, смерть и выбор эволюции */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(227, 232, 240, 0.7);
+  backdrop-filter: blur(3px);
+}
+
+/* Панель эволюции не закрывает игру: прозрачный фон, карточка сверху */
+.overlay.soft {
+  background: none;
+  backdrop-filter: none;
+  pointer-events: none;
+  align-items: flex-start;
+  padding-top: 90px;
+}
+
+.overlay.soft .card {
+  pointer-events: auto;
+}
+
+.card {
+  max-width: 100%;
+  padding: 28px 32px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(30, 40, 60, 0.18);
+  text-align: center;
+}
+
+.card h1 {
+  margin: 0 0 10px;
+  font-size: 36px;
+  letter-spacing: 3px;
+}
+
+.card h2 {
+  margin: 0 0 16px;
+  font-size: 24px;
+}
+
+.card p {
+  margin: 6px 0;
+  font-size: 17px;
+}
+
+.hint {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #6b7589;
+}
+
+#name-input {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto 14px;
+  padding: 12px 14px;
+  font-size: 18px;
+  text-align: center;
+  border: 2px solid #d5dce8;
+  border-radius: 12px;
+  outline: none;
+}
+
+#name-input:focus {
+  border-color: #4f9cf5;
+}
+
+#play-btn,
+#restart-btn {
+  padding: 12px 34px;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background: #4f9cf5;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #2e70cc;
+}
+
+#play-btn:active,
+#restart-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #2e70cc;
+}
+
+/* Игровой интерфейс */
+#hud {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+#hud > * {
+  position: absolute;
+}
+
+#fps,
+#toggles {
+  left: 12px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #5a6375;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 8px;
+}
+
+#fps {
+  top: 12px;
+}
+
+#toggles {
+  top: 44px;
+}
+
+#leaderboard {
+  top: 12px;
+  right: 12px;
+  width: 200px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(30, 40, 60, 0.1);
+}
+
+#leaderboard h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #6b7589;
+}
+
+#lb-list {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  list-style: none;
+}
+
+#lb-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+
+#lb-list li > span:first-child {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#lb-list li.me {
+  font-weight: 700;
+  background: rgba(79, 156, 245, 0.18);
+}
+
+#stats-panel {
+  left: 12px;
+  bottom: 12px;
+  width: 260px;
+  padding: 10px 12px;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(30, 40, 60, 0.1);
+}
+
+.panel-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#points-left {
+  margin-left: 4px;
+  color: #2e9e5b;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  font-size: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.stat-row:hover {
+  background: #eef3fb;
+}
+
+.stat-key {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  background: #e5eaf2;
+  border-radius: 5px;
+}
+
+.stat-row.can .stat-key {
+  color: #fff;
+  background: #2e9e5b;
+}
+
+.stat-name {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stat-bar {
+  flex: none;
+  display: flex;
+  gap: 2px;
+}
+
+.seg {
+  width: 8px;
+  height: 12px;
+  background: #dfe5ee;
+  border-radius: 3px;
+}
+
+.seg.on {
+  background: #4f9cf5;
+}
+
+#level-box {
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: min(420px, calc(100vw - 260px));
+  min-width: 200px;
+  padding: 8px 14px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(30, 40, 60, 0.1);
+}
+
+#level-text {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#xp-bar {
+  height: 12px;
+  overflow: hidden;
+  background: #dfe5ee;
+  border-radius: 6px;
+}
+
+#xp-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #ffd54f, #ffa726);
+  border-radius: 6px;
+}
+
+#minimap {
+  right: 12px;
+  bottom: 12px;
+  width: 160px;
+  height: 160px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(30, 40, 60, 0.1);
+}
+
+/* Карточки эволюции */
+#evo-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.evo-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 180px;
+  padding: 14px;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  background: #fff;
+  border: 2px solid #d5dce8;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.evo-option strong {
+  font-size: 17px;
+}
+
+.evo-option span {
+  font-size: 13px;
+  color: #6b7589;
+}
+
+.evo-option:hover {
+  border-color: #4f9cf5;
+  box-shadow: 0 6px 16px rgba(79, 156, 245, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Узкие экраны: панели становятся компактнее */
+@media (max-width: 720px) {
+  #leaderboard {
+    width: 150px;
+    font-size: 12px;
+  }
+
+  #stats-panel {
+    width: 180px;
+  }
+
+  #minimap {
+    width: 110px;
+    height: 110px;
+  }
+
+  #level-box {
+    bottom: 200px;
+  }
+}
