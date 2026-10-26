@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tank Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Основной холст игры -->
+  <canvas id="game"></canvas>
+
+  <!-- Интерфейс во время игры -->
+  <div id="hud" class="hidden">
+    <!-- Переключатели автострельбы / автоповорота -->
+    <div id="toggles">
+      <div class="chip" id="chip-fire"><kbd>E</kbd> Автострельба</div>
+      <div class="chip" id="chip-spin"><kbd>C</kbd> Автоповорот</div>
+    </div>
+
+    <!-- Таблица лидеров -->
+    <div id="leaderboard">
+      <div class="panel-title">Лидеры</div>
+      <ol id="lb-list"></ol>
+    </div>
+
+    <!-- Панель выбора класса (эволюция на 15 / 30 / 45 уровнях) -->
+    <div id="evolve" class="hidden">
+      <div class="panel-title" id="evolve-title">Выберите класс</div>
+      <div id="evolve-tiles"></div>
+    </div>
+
+    <!-- Прокачка статов -->
+    <div id="stats">
+      <div id="stats-points" class="hidden"></div>
+      <div id="stat-rows"></div>
+    </div>
+
+    <!-- Миникарта -->
+    <canvas id="minimap"></canvas>
+
+    <!-- Нижние полосы: счёт, уровень, ник -->
+    <div id="bars">
+      <div id="score-pill">Счёт: <b id="score-value">0</b></div>
+      <div id="level-bar">
+        <div id="level-fill"></div>
+        <div id="level-text">Lv 1 Tank</div>
+      </div>
+      <div id="name-pill"></div>
+    </div>
+
+    <div id="toast"></div>
+  </div>
+
+  <!-- Стартовый экран -->
+  <div id="start-screen" class="screen">
+    <div class="card">
+      <h1>TANK <span>ARENA</span></h1>
+      <p class="subtitle">Арена, боты и 45 уровней прокачки</p>
+      <input id="nick-input" type="text" maxlength="16" placeholder="Введите ник" autocomplete="off" spellcheck="false">
+      <button id="play-btn" class="btn">Играть</button>
+      <div class="help">
+        <div><kbd>WASD</kbd> / <kbd>стрелки</kbd> — движение</div>
+        <div><b>Мышь</b> — прицел, <b>ЛКМ</b> / <kbd>Пробел</kbd> — огонь</div>
+        <div><kbd>E</kbd> — автострельба, <kbd>C</kbd> — автоповорот</div>
+        <div><kbd>1</kbd>–<kbd>8</kbd> — прокачка характеристик</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Экран смерти -->
+  <div id="death-screen" class="screen hidden">
+    <div class="card">
+      <h2>Вы уничтожены</h2>
+      <p class="killer" id="death-killer"></p>
+      <div class="result-grid">
+        <div><span>Финальный счёт</span><b id="death-score">0</b></div>
+        <div><span>Уровень</span><b id="death-level">1</b></div>
+        <div><span>Время жизни</span><b id="death-time">0 сек</b></div>
+        <div><span>Уничтожено танков</span><b id="death-kills">0</b></div>
+      </div>
+      <button id="again-btn" class="btn">Играть снова</button>
+    </div>
+  </div>
+
+  <!-- Скрипты подключаются обычными тегами (без модулей), чтобы игра работала с file:// -->
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/classes.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/bullets.js"></script>
+  <script src="js/shapes.js"></script>
+  <script src="js/tank.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/bots.js"></script>
+  <script src="js/collisions.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
