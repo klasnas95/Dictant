@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tank Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <!-- HUD: таблица лидеров, миникарта, панель улучшений, полоса опыта -->
+  <div id="hud" class="hidden">
+    <div class="toggles">
+      <span id="tg-fire" class="toggle">E · Автострельба</span>
+      <span id="tg-rotate" class="toggle">C · Автоповорот</span>
+    </div>
+
+    <div class="panel leaderboard">
+      <div class="panel-title">Таблица лидеров</div>
+      <div id="lb-list"></div>
+    </div>
+
+    <div class="panel minimap">
+      <canvas id="minimap" width="160" height="160"></canvas>
+    </div>
+
+    <div class="panel stats-panel">
+      <div class="panel-title">Улучшения: <span id="points">0</span></div>
+      <div id="stats-list"></div>
+    </div>
+
+    <div class="xp-strip">
+      <div id="xp-fill"></div>
+      <span id="xp-text">Уровень 1</span>
+    </div>
+  </div>
+
+  <!-- Выбор эволюции: игра продолжается, панель поверх неё -->
+  <div id="evo-overlay" class="overlay evo hidden">
+    <div class="card">
+      <h2 id="evo-title">Выберите класс</h2>
+      <div id="evo-options" class="evo-options"></div>
+    </div>
+  </div>
+
+  <!-- Стартовый экран -->
+  <div id="start-overlay" class="overlay">
+    <div class="card">
+      <h1>Tank Arena</h1>
+      <p class="sub">Сражайтесь с ботами, набирайте опыт и эволюционируйте.</p>
+      <input id="nick" maxlength="15" placeholder="Введите ник" autocomplete="off">
+      <button id="start-btn" class="btn">Начать</button>
+      <p class="hint">
+        WASD — движение · Мышь — прицел · ЛКМ / Пробел — огонь<br>
+        E — автострельба · C — автоповорот · 1–8 — улучшения
+      </p>
+    </div>
+  </div>
+
+  <!-- Экран смерти -->
+  <div id="death-overlay" class="overlay hidden">
+    <div class="card">
+      <h2>Вас уничтожили</h2>
+      <div id="death-stats" class="death-stats"></div>
+      <button id="restart-btn" class="btn">Играть снова</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/shapes.js"></script>
+  <script src="js/bullets.js"></script>
+  <script src="js/tank.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/bots.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
