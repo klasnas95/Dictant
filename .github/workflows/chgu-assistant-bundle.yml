@@ -9,15 +9,24 @@ on:
 permissions:
   contents: write
 
-env:
-  MODEL_URL: https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q6_K.gguf
-  MODEL_FILE: Qwen3.5-0.8B-Q6_K.gguf
-  RELEASE_TAG: chgu-assistant-qwen3.5-0.8b
-
 jobs:
   bundle:
     runs-on: windows-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - size: 0.8B
+            asset: ChGU-Assistant.zip
+          - size: 2B
+            asset: ChGU-Assistant-Qwen3.5-2B.zip
+    env:
+      MODEL_URL: https://huggingface.co/unsloth/Qwen3.5-${{ matrix.size }}-GGUF/resolve/main/Qwen3.5-${{ matrix.size }}-Q6_K.gguf
+      MODEL_FILE: Qwen3.5-${{ matrix.size }}-Q6_K.gguf
+      RELEASE_TAG: chgu-assistant-qwen3.5-${{ matrix.size == '2B' && '2b' || '0.8b' }}
+      ASSET: ${{ matrix.asset }}
+      SIZE: ${{ matrix.size }}
     defaults:
       run:
         shell: powershell
@@ -74,9 +83,9 @@ jobs:
       - name: Build zip
         run: |
           $ErrorActionPreference = 'Stop'
-          & 7z a -tzip -mx=5 -mcu=on ChGU-Assistant.zip ChGU-Assistant
+          & 7z a -tzip -mx=5 -mcu=on $env:ASSET ChGU-Assistant
           if ($LASTEXITCODE) { throw '7z failed' }
-          Get-Item ChGU-Assistant.zip | Format-List Name, Length
+          Get-Item $env:ASSET | Format-List Name, Length
 
       - name: Publish release
         env:
@@ -85,7 +94,7 @@ jobs:
         run: |
           set -e
           gh release delete "$RELEASE_TAG" --cleanup-tag -y || true
-          gh release create "$RELEASE_TAG" ChGU-Assistant.zip \
+          gh release create "$RELEASE_TAG" "$ASSET" \
             --target "$GITHUB_SHA" \
-            --title "ЧГУ.Ассистент + встроенная Qwen3.5-0.8B" \
-            --notes "Офлайн-сборка: ассистент + llama.cpp ($(cat llama_version.txt)) + Qwen3.5-0.8B (Q6_K). Распакуйте и запустите «Установить.bat». Интернет и Ollama не нужны."
+            --title "ЧГУ.Ассистент + встроенная Qwen3.5-$SIZE" \
+            --notes "Офлайн-сборка: ассистент + llama.cpp ($(cat llama_version.txt)) + Qwen3.5-$SIZE (Q6_K). Распакуйте и запустите «Установить.bat». Интернет и Ollama не нужны."
