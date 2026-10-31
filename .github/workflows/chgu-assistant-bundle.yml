@@ -1,0 +1,111 @@
+name: ChGU-Assistant bundle (Qwen3.5-0.8B)
+
+on:
+  push:
+    branches: [claude/chgu-assistant-qwen]
+    paths: ['ChGU-Assistant/**', '.github/workflows/chgu-assistant-bundle.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  MODEL_URL: https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q6_K.gguf
+  MODEL_FILE: Qwen3.5-0.8B-Q6_K.gguf
+  RELEASE_TAG: chgu-assistant-qwen3.5-0.8b
+
+jobs:
+  bundle:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download llama.cpp (Windows, CPU x64)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $rel = gh api repos/ggml-org/llama.cpp/releases/latest | ConvertFrom-Json
+          $asset = $rel.assets | Where-Object { $_.name -match '^llama-.*-bin-win-cpu-x64\.zip$' } | Select-Object -First 1
+          if (-not $asset) { throw 'llama.cpp win-cpu-x64 asset not found' }
+          "llama.cpp $($rel.tag_name): $($asset.name)" | Tee-Object -FilePath llama_version.txt
+          Invoke-WebRequest $asset.browser_download_url -OutFile llama.zip -UseBasicParsing
+          Expand-Archive llama.zip -DestinationPath llama_raw -Force
+          Get-ChildItem llama_raw -Recurse | Format-Table Name, Length -AutoSize | Out-String -Width 200
+          $llm = 'ChGU-Assistant\llm'
+          New-Item -ItemType Directory -Force $llm | Out-Null
+          $srv = Get-ChildItem llama_raw -Recurse -Filter llama-server.exe | Select-Object -First 1
+          Copy-Item $srv.FullName $llm
+          Get-ChildItem $srv.DirectoryName -Filter *.dll | Copy-Item -Destination $llm
+          # app-local VC++ runtime, чтобы работало на ПК без Visual C++ Redistributable
+          foreach ($d in 'msvcp140.dll', 'msvcp140_1.dll', 'msvcp140_2.dll', 'vcruntime140.dll', 'vcruntime140_1.dll', 'vcomp140.dll') {
+            $p = Join-Path $env:SystemRoot "System32\$d"
+            if ((Test-Path $p) -and -not (Test-Path (Join-Path $llm $d))) { Copy-Item $p $llm }
+          }
+          # libomp (если сборка clang+OpenMP и её нет в архиве)
+          $needOmp = Get-ChildItem $llm -Include *.exe, *.dll -Recurse | Where-Object { [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($_.FullName)) -match 'libomp140\.x86_64\.dll' }
+          if ($needOmp -and -not (Test-Path "$llm\libomp140.x86_64.dll")) {
+            $omp = Get-ChildItem 'C:\Program Files\Microsoft Visual Studio' -Recurse -Filter libomp140.x86_64.dll -ErrorAction SilentlyContinue | Where-Object { $_.FullName -match 'x64' -and $_.FullName -notmatch 'debug' } | Select-Object -First 1
+            if ($omp) { Copy-Item $omp.FullName $llm; "copied $($omp.FullName)" } else { Write-Warning 'libomp140.x86_64.dll needed but not found' }
+          }
+          Copy-Item llama_version.txt $llm
+          Get-ChildItem $llm | Format-Table Name, Length -AutoSize | Out-String -Width 200
+
+      - name: Download Qwen3.5-0.8B (GGUF)
+        run: |
+          $ErrorActionPreference = 'Stop'
+          curl.exe -L --fail --retry 5 -o "ChGU-Assistant\llm\$env:MODEL_FILE" $env:MODEL_URL
+          if ($LASTEXITCODE) { throw "model download failed" }
+          Get-Item "ChGU-Assistant\llm\$env:MODEL_FILE" | Format-List Name, Length
+
+      - name: Smoke test — real engine.ps1 talks to the bundled model
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = (Resolve-Path 'ChGU-Assistant').Path
+          New-Item -ItemType Directory -Force "$root\logs" | Out-Null
+          $sync = [hashtable]::Synchronized(@{
+            Q = New-Object 'System.Collections.Concurrent.ConcurrentQueue[object]'; Answer = $null; IsAdmin = $true
+            Model = ''; WantModel = ''; Url = 'http://localhost:11434'; Backend = 'auto'; Api = ''; LlmUrl = ''
+            Root = $root; LogPath = "$root\logs\actions.jsonl"
+            History = [Collections.ArrayList]::Synchronized((New-Object Collections.ArrayList)); LastInfo = ''; Busy = $false; Ready = $false })
+          . ([ScriptBlock]::Create([IO.File]::ReadAllText("$root\engine.ps1", [Text.Encoding]::UTF8)))
+          $sw = [Diagnostics.Stopwatch]::StartNew()
+          Init-Model
+          "Init-Model: $([int]$sw.Elapsed.TotalSeconds) s; Model='$($sync.Model)' Api='$($sync.Api)' Url='$($sync.LlmUrl)'"
+          if ($sync.Api -ne 'openai') { if (Test-Path "$root\logs\llm.log") { Get-Content "$root\logs\llm.log" -Tail 60 }; throw 'bundled model did not start' }
+          $sw.Restart()
+          $ans = Invoke-Ollama @(@{ role = 'system'; content = $SystemPrompt }, @{ role = 'user'; content = 'Составь план 30-минутного занятия по теме «Закон Ома» для студентов первого курса.' })
+          "--- chat ($([int]$sw.Elapsed.TotalSeconds) s) ---"; $ans
+          if (-not $ans) { throw 'empty answer' }
+          $sw.Restart()
+          $route = Invoke-Ollama @(@{ role = 'system'; content = $SystemPrompt }, @{ role = 'user'; content = 'у меня не печатает принтер' })
+          "--- routing ($([int]$sw.Elapsed.TotalSeconds) s) ---"; $route
+          $sw.Restart()
+          $o = Get-Outline 'Фотосинтез' 5
+          "--- outline ($([int]$sw.Elapsed.TotalSeconds) s) ---"; $o | ConvertTo-Json -Depth 6
+          Get-Process llama-server -ErrorAction SilentlyContinue | Stop-Process -Force
+          Start-Sleep -Seconds 1
+          Remove-Item "$root\logs" -Recurse -Force
+
+      - name: Build zip
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & 7z a -tzip -mx=5 -mcu=on ChGU-Assistant.zip ChGU-Assistant
+          if ($LASTEXITCODE) { throw '7z failed' }
+          Get-Item ChGU-Assistant.zip | Format-List Name, Length
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -e
+          gh release delete "$RELEASE_TAG" --cleanup-tag -y || true
+          gh release create "$RELEASE_TAG" ChGU-Assistant.zip \
+            --target "$GITHUB_SHA" \
+            --title "ЧГУ.Ассистент + встроенная Qwen3.5-0.8B" \
+            --notes "Офлайн-сборка: ассистент + llama.cpp ($(cat llama_version.txt)) + Qwen3.5-0.8B (Q6_K). Распакуйте и запустите «Установить.bat». Интернет и Ollama не нужны."
