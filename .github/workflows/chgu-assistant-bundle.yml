@@ -38,7 +38,7 @@ jobs:
           }
           if (-not $asset) { $rels | Select-Object -First 3 | ForEach-Object { "release $($_.tag_name):"; $_.assets | ForEach-Object { "  $($_.name)" } } }
           if (-not $asset) { throw 'llama.cpp Windows CPU x64 asset not found' }
-          "llama.cpp $($rel.tag_name): $($asset.name)" | Tee-Object -FilePath llama_version.txt
+          $ver = "llama.cpp $($rel.tag_name): $($asset.name)"; $ver; [IO.File]::WriteAllText("$PWD\llama_version.txt", $ver)
           Invoke-WebRequest $asset.browser_download_url -OutFile llama.zip -UseBasicParsing
           Expand-Archive llama.zip -DestinationPath llama_raw -Force
           Get-ChildItem llama_raw -Recurse | Format-Table Name, Length -AutoSize | Out-String -Width 200
