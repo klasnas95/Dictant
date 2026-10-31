@@ -29,10 +29,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $rel = gh api repos/ggml-org/llama.cpp/releases/latest | ConvertFrom-Json
-          "release $($rel.tag_name) assets:"; $rel.assets | ForEach-Object { "  $($_.name)  $($_.size)" }
-          $asset = $rel.assets | Where-Object { $_.name -match 'win' -and $_.name -match 'cpu' -and $_.name -match 'x64' -and $_.name -match '\.zip$' } | Select-Object -First 1
-          if (-not $asset) { $asset = $rel.assets | Where-Object { $_.name -match 'win' -and $_.name -match '(x64|amd64)' -and $_.name -match '\.zip$' -and $_.name -notmatch 'cuda|cudart|hip|sycl|vulkan|opencl|arm64|kompute' } | Select-Object -First 1 }
+          $rels = gh api 'repos/ggml-org/llama.cpp/releases?per_page=40' | ConvertFrom-Json
+          $asset = $null; $rel = $null
+          foreach ($r in $rels) {
+            if ($r.draft -or $r.prerelease) { continue }
+            $a = $r.assets | Where-Object { $_.name -match 'win' -and $_.name -match 'cpu' -and $_.name -match 'x64' -and $_.name -match '\.zip$' } | Select-Object -First 1
+            if ($a) { $asset = $a; $rel = $r; break }
+          }
+          if (-not $asset) { $rels | Select-Object -First 3 | ForEach-Object { "release $($_.tag_name):"; $_.assets | ForEach-Object { "  $($_.name)" } } }
           if (-not $asset) { throw 'llama.cpp Windows CPU x64 asset not found' }
           "llama.cpp $($rel.tag_name): $($asset.name)" | Tee-Object -FilePath llama_version.txt
           Invoke-WebRequest $asset.browser_download_url -OutFile llama.zip -UseBasicParsing
