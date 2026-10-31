@@ -30,8 +30,10 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $rel = gh api repos/ggml-org/llama.cpp/releases/latest | ConvertFrom-Json
-          $asset = $rel.assets | Where-Object { $_.name -match '^llama-.*-bin-win-cpu-x64\.zip$' } | Select-Object -First 1
-          if (-not $asset) { throw 'llama.cpp win-cpu-x64 asset not found' }
+          "release $($rel.tag_name) assets:"; $rel.assets | ForEach-Object { "  $($_.name)  $($_.size)" }
+          $asset = $rel.assets | Where-Object { $_.name -match 'win' -and $_.name -match 'cpu' -and $_.name -match 'x64' -and $_.name -match '\.zip$' } | Select-Object -First 1
+          if (-not $asset) { $asset = $rel.assets | Where-Object { $_.name -match 'win' -and $_.name -match '(x64|amd64)' -and $_.name -match '\.zip$' -and $_.name -notmatch 'cuda|cudart|hip|sycl|vulkan|opencl|arm64|kompute' } | Select-Object -First 1 }
+          if (-not $asset) { throw 'llama.cpp Windows CPU x64 asset not found' }
           "llama.cpp $($rel.tag_name): $($asset.name)" | Tee-Object -FilePath llama_version.txt
           Invoke-WebRequest $asset.browser_download_url -OutFile llama.zip -UseBasicParsing
           Expand-Archive llama.zip -DestinationPath llama_raw -Force
